@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <Property Id="STOPVIBE_SERVICE_PATH" Value="[INSTALLDIR]stopvibe-service.exe" Secure="yes" />
+
+    <CustomAction
+      Id="InstallStopVibeService"
+      Property="STOPVIBE_SERVICE_PATH"
+      ExeCommand="--install"
+      Return="check" />
+
+    <CustomAction
+      Id="UninstallStopVibeService"
+      Property="STOPVIBE_SERVICE_PATH"
+      ExeCommand="--uninstall"
+      Return="check" />
+
+    <InstallExecuteSequence>
+      <Custom Action="InstallStopVibeService" After="InstallFiles">NOT REMOVE</Custom>
+      <Custom Action="UninstallStopVibeService" Before="RemoveFiles">REMOVE="ALL"</Custom>
+    </InstallExecuteSequence>
+  </Fragment>
+</Wix>

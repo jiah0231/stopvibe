@@ -1,0 +1,25 @@
+# Rust
+/target/
+
+# Tauri generated files and bundled build resources
+/src-tauri/gen/
+/src-tauri/target/
+/src-tauri/stopvibe-service.exe
+/src-tauri/stopvibe-stub.exe
+
+# Frontend
+/ui/node_modules/
+/ui/dist/
+
+# Logs and local environment
+*.log
+*.tmp
+.env
+.env.*
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

@@ -1,0 +1,46 @@
+{
+  "productName": "StopVibe",
+  "version": "0.1.0",
+  "identifier": "com.stopvibe.desktop",
+  "build": {
+    "frontendDist": "../ui/dist",
+    "devUrl": "http://localhost:5173",
+    "beforeDevCommand": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/prepare-tauri-resources.ps1 -Dev",
+    "beforeBuildCommand": "powershell -NoProfile -ExecutionPolicy Bypass -File ../scripts/prepare-tauri-resources.ps1"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "StopVibe",
+        "width": 500,
+        "height": 650,
+        "resizable": true,
+        "minWidth": 420,
+        "minHeight": 550
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["msi", "nsis"],
+    "icon": ["icons/icon.ico"],
+    "resources": ["stopvibe-service.exe"],
+    "windows": {
+      "nsis": {
+        "installMode": "perMachine",
+        "installerHooks": "./windows/hooks.nsh"
+      },
+      "wix": {
+        "fragmentPaths": ["./windows/fragments/service-install.wxs"]
+      }
+    }
+  },
+  "plugins": {
+    "shell": {
+      "open": true
+    }
+  }
+}

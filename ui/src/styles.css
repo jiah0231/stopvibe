@@ -1,0 +1,201 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #1a1a2e;
+  color: #eee;
+  min-height: 100vh;
+  user-select: none;
+}
+
+#root {
+  padding: 24px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  font-size: 1.8rem;
+  text-align: center;
+  margin-bottom: 4px;
+  color: #fff;
+}
+
+.subtitle {
+  text-align: center;
+  color: #888;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+
+.status-bar {
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.status-bar.connected {
+  background: #1b3a2a;
+  color: #4caf50;
+}
+
+.status-bar.disconnected {
+  background: #3a1b1b;
+  color: #f44336;
+}
+
+.active-session {
+  background: #2d1b1b;
+  border: 1px solid #f44336;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.active-session h2 {
+  color: #f44336;
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+}
+
+.countdown {
+  font-size: 2.4rem;
+  font-family: 'Courier New', monospace;
+  color: #fff;
+  margin: 12px 0;
+}
+
+.active-session .info {
+  color: #888;
+  font-size: 0.85rem;
+  margin-top: 12px;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #ccc;
+}
+
+.duration-picker {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.duration-picker label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.duration-picker input {
+  width: 80px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background: #16213e;
+  color: #fff;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.targets-list {
+  max-height: 240px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  padding-right: 4px;
+}
+
+.target-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  background: #16213e;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.target-item:hover {
+  background: #1a2a4e;
+}
+
+.target-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #f44336;
+}
+
+.target-item .name {
+  flex: 1;
+  font-size: 0.9rem;
+}
+
+.target-item .exes {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.start-btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  background: #c62828;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: auto;
+}
+
+.start-btn:hover {
+  background: #e53935;
+}
+
+.start-btn:disabled {
+  background: #333;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.error-msg {
+  color: #f44336;
+  font-size: 0.85rem;
+  text-align: center;
+  margin-top: 12px;
+}
+
+.blocked-targets {
+  margin-top: 16px;
+  text-align: left;
+}
+
+.blocked-targets h3 {
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 6px;
+}
+
+.blocked-targets li {
+  list-style: none;
+  padding: 2px 0;
+  font-size: 0.85rem;
+  color: #ccc;
+}
