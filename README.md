@@ -6,6 +6,14 @@ Set a timer, choose the tools you want to block, and StopVibe keeps them unavail
 
 **Download:** [GitHub Releases](https://github.com/jiah0231/stopvibe/releases)
 
+## Background
+
+AI coding tools are incredibly useful, but they can also make it too easy to skip the uncomfortable parts of programming: sitting with a problem, reading unfamiliar code, debugging patiently, and forming your own mental model.
+
+StopVibe was built for that specific tension. It is not anti-AI. It is a small self-control tool for people who like AI coding assistants but sometimes want a real, enforceable break from them. Instead of relying on willpower in the moment, you decide in advance: for the next block of time, these tools are off-limits.
+
+The goal is not to punish yourself. The goal is to create enough quiet space for deliberate practice, deeper focus, and more independent thinking.
+
 ## What It Blocks
 
 Enabled by default:
@@ -96,6 +104,14 @@ MIT
 你设置一个时间，选择要屏蔽的软件，然后 StopVibe 会在倒计时结束前持续阻止这些工具打开。它适合那种“我喜欢 AI 编程工具，但现在想靠自己思考、读代码、调 bug、写代码”的时刻。
 
 **下载地址：** [GitHub Releases](https://github.com/jiah0231/stopvibe/releases)
+
+## 项目背景
+
+AI 编程工具非常有用，但它也很容易让人跳过编程里最难、也最值得练习的部分：和问题待在一起，读不熟悉的代码，耐心调试，自己建立对系统的理解。
+
+StopVibe 就是为这种矛盾做的。它不是反 AI，也不是否定 AI 编程工具，而是给喜欢这些工具的人一个“可以认真停下来”的硬边界。你不需要在冲动的时候和自己拉扯，而是在开始前先决定：接下来这段时间，这些工具先不能用。
+
+它的目标不是惩罚自己，而是给独立思考、刻意练习和深度专注留出一段安静的空间。
 
 ## 默认阻止的软件
 
