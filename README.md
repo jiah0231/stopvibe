@@ -83,15 +83,6 @@ ui                       React frontend
 scripts                  Build helper scripts
 ```
 
-Build from source:
-
-```powershell
-cd ui
-npm install
-cd ..
-cargo tauri build
-```
-
 ## License
 
 MIT
@@ -181,15 +172,6 @@ crates/stopvibe-service  Windows 服务、阻止逻辑、进程监控、状态�
 src-tauri                Tauri 桌面壳和安装器钩子
 ui                       React 前端
 scripts                  构建辅助脚本
-```
-
-从源码构建：
-
-```powershell
-cd ui
-npm install
-cd ..
-cargo tauri build
 ```
 
 ## 许可证
