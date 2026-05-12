@@ -185,7 +185,7 @@ fn main() -> Result<()> {
         match args[1].as_str() {
             "--install" => return install_service(),
             "--stub" => {
-                run_stub();
+                run_stub(&args[2..]);
                 return Ok(());
             }
             "--uninstall" => return uninstall_service(),
@@ -506,18 +506,126 @@ fn command_output(output: &std::process::Output) -> String {
     String::from_utf8_lossy(&output.stdout).trim().to_string()
 }
 
-fn run_stub() {
-    use windows::core::w;
+fn run_stub(original_args: &[String]) {
+    use std::io::Write;
+    use windows::core::PCWSTR;
+    use windows::Win32::System::Console::{AttachConsole, FreeConsole, ATTACH_PARENT_PROCESS};
     use windows::Win32::UI::WindowsAndMessaging::{MessageBoxW, MB_ICONWARNING, MB_OK};
 
-    let title = w!("StopVibe - Blocked");
-    let message = w!("This application is currently blocked by StopVibe.\n\n\
-         You are in a focus session. The block cannot be removed until the timer expires.\n\n\
-         Go do something productive instead!");
+    let target = blocked_target_from_stub_args(original_args);
+    let message = blocked_message(&target);
+
+    if target.is_cli {
+        let wrote_to_console = unsafe { AttachConsole(ATTACH_PARENT_PROCESS).is_ok() }
+            && std::fs::OpenOptions::new()
+                .write(true)
+                .open(r"\\.\CONOUT$")
+                .and_then(|mut console| writeln!(console, "\n{}", message))
+                .is_ok();
+
+        unsafe {
+            let _ = FreeConsole();
+        }
+
+        if wrote_to_console {
+            return;
+        }
+    }
+
+    let title = to_wide("StopVibe - Blocked");
+    let message = to_wide(&message);
 
     unsafe {
-        MessageBoxW(None, message, title, MB_OK | MB_ICONWARNING);
+        MessageBoxW(
+            None,
+            PCWSTR(message.as_ptr()),
+            PCWSTR(title.as_ptr()),
+            MB_OK | MB_ICONWARNING,
+        );
     }
+}
+
+struct BlockedTarget {
+    name: String,
+    exe_name: Option<String>,
+    is_cli: bool,
+}
+
+fn blocked_target_from_stub_args(original_args: &[String]) -> BlockedTarget {
+    let exe_name = original_args.first().and_then(|arg| {
+        std::path::Path::new(arg)
+            .file_name()
+            .map(|name| name.to_string_lossy().to_ascii_lowercase())
+    });
+
+    let default_target = exe_name.as_ref().and_then(|exe_name| {
+        stopvibe_common::default_targets()
+            .into_iter()
+            .find(|target| {
+                target
+                    .exe_names
+                    .iter()
+                    .any(|candidate| candidate.eq_ignore_ascii_case(exe_name))
+            })
+    });
+
+    let name = default_target
+        .as_ref()
+        .map(|target| target.name.clone())
+        .or_else(|| exe_name.clone())
+        .unwrap_or_else(|| "This application".into());
+
+    let is_cli = exe_name.as_deref().map_or(false, is_cli_exe)
+        || default_target
+            .as_ref()
+            .map_or(false, |target| !target.cmdline_patterns.is_empty());
+
+    BlockedTarget {
+        name,
+        exe_name,
+        is_cli,
+    }
+}
+
+fn is_cli_exe(exe_name: &str) -> bool {
+    matches!(
+        exe_name,
+        "claude.exe" | "aider.exe" | "codex.exe" | "gemini.exe" | "goose.exe"
+    )
+}
+
+fn blocked_message(target: &BlockedTarget) -> String {
+    let remaining = active_remaining_text().unwrap_or_else(|| "未知".into());
+    let exe_text = target
+        .exe_name
+        .as_ref()
+        .map(|exe| format!(" ({})", exe))
+        .unwrap_or_default();
+
+    if target.is_cli {
+        format!(
+            "{}{} 正在被 StopVibe 禁用，剩余时间：{}。",
+            target.name, exe_text, remaining
+        )
+    } else {
+        format!(
+            "{}{} 正在被 StopVibe 禁用。\n\n剩余时间：{}\n\n倒计时结束前无法解除阻止。",
+            target.name, exe_text, remaining
+        )
+    }
+}
+
+fn active_remaining_text() -> Option<String> {
+    let session = StateManager::new().ok()?.load_session().ok()??;
+    if session.is_active() {
+        Some(format_remaining(session.remaining_secs()))
+    } else {
+        None
+    }
+}
+
+fn to_wide(value: &str) -> Vec<u16> {
+    value.encode_utf16().chain(std::iter::once(0)).collect()
 }
 
 #[cfg(test)]
@@ -562,5 +670,26 @@ mod tests {
         assert_eq!(format_remaining(61), "1m 1s");
         assert_eq!(format_remaining(7), "7s");
         assert_eq!(format_remaining(-1), "0s");
+    }
+
+    #[test]
+    fn stub_identifies_cli_targets() {
+        let target =
+            blocked_target_from_stub_args(&[r"C:\Users\me\AppData\Roaming\npm\claude.exe".into()]);
+
+        assert_eq!(target.name, "Claude Code");
+        assert_eq!(target.exe_name.as_deref(), Some("claude.exe"));
+        assert!(target.is_cli);
+    }
+
+    #[test]
+    fn stub_identifies_gui_targets() {
+        let target = blocked_target_from_stub_args(&[
+            r"C:\Users\me\AppData\Local\Programs\Cursor\Cursor.exe".into(),
+        ]);
+
+        assert_eq!(target.name, "Cursor");
+        assert_eq!(target.exe_name.as_deref(), Some("cursor.exe"));
+        assert!(!target.is_cli);
     }
 }
